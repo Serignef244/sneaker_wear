@@ -19,7 +19,7 @@ export default function Home() {
         .from('products')
         .select('*')
         .limit(8);
-      
+
       if (data) setProducts(data);
       setLoading(false);
     }
@@ -30,7 +30,7 @@ export default function Home() {
     <main className="bg-[#050505] min-h-screen text-white">
       <Navbar />
       <Cart />
-      
+
       <Hero />
 
       {/* Featured Section */}
@@ -83,7 +83,7 @@ export default function Home() {
           </div>
           <div className="space-y-4">
             <h3 className="text-neon-magenta font-bold uppercase tracking-widest text-sm">Livraison</h3>
-            <p className="text-white/50 text-sm">Express en 24/48H</p>
+            <p className="text-white/50 text-sm">sous 10 jours</p>
           </div>
           <div className="space-y-4">
             <h3 className="text-neon-green font-bold uppercase tracking-widest text-sm">Contact</h3>
@@ -102,8 +102,8 @@ export default function Home() {
             © 2024 SneakerWear. Tout droits réservés.
           </p>
           <div className="flex gap-8 uppercase text-[10px] tracking-widest font-bold text-white/50">
-            <a href="#" className="hover:text-neon-cyan transition-colors">Instagram</a>
-            <a href="#" className="hover:text-neon-cyan transition-colors">WhatsApp</a>
+            <a href="https://www.instagram.com/sneaker_wea" target="_blank" rel="noopener noreferrer" className="hover:text-neon-cyan transition-colors">Instagram</a>
+            <a href="https://wa.me/221775548799" target="_blank" rel="noopener noreferrer" className="hover:text-neon-green transition-colors">WhatsApp</a>
           </div>
         </div>
       </footer>
