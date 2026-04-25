@@ -243,13 +243,25 @@ export default function AdminPage() {
                       onChange={(e) => setFormData({...formData, prix_fcfa: parseInt(e.target.value)})} />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-widest text-white/50">Type</label>
-                    <select className="w-full bg-white/5 border border-white/10 p-4 text-white outline-none focus:border-neon-cyan"
+                    <label className="text-[10px] uppercase tracking-widest text-white/50">Catégorie</label>
+                    <select className="w-full bg-[#111] border border-white/10 p-4 text-white outline-none focus:border-neon-cyan"
+                      value={formData.type}
                       onChange={(e) => setFormData({...formData, type: e.target.value})}>
-                      <option value="chaussures">Chaussures</option>
-                      <option value="maillots">Maillots</option>
-                      <option value="vetements">Vêtements</option>
-                      <option value="casquettes">Casquettes</option>
+                      <optgroup label="👟 Sneakers">
+                        <option value="chaussures">Chaussures / Sneakers</option>
+                      </optgroup>
+                      <optgroup label="👕 Vêtements">
+                        <option value="vetements">Vêtements (Hauts, Bas, Tenues)</option>
+                        <option value="maillots">Maillots de Sport</option>
+                      </optgroup>
+                      <optgroup label="⌚ Montres">
+                        <option value="montres">Montres</option>
+                      </optgroup>
+                      <optgroup label="🎒 Accessoires">
+                        <option value="casquettes">Casquettes</option>
+                        <option value="sac">Sacs</option>
+                        <option value="accessoires">Autres Accessoires</option>
+                      </optgroup>
                     </select>
                   </div>
                 </div>
