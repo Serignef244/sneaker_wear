@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Product } from '@/lib/supabase';
 
@@ -20,13 +19,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
     >
       <Link href={`/products/${product.id}`} className="flex-1">
         <div className="relative aspect-square w-full overflow-hidden bg-white/5">
-          <Image
-            src={product.images[0]}
-            alt={`${product.marque} ${product.modele}`}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          {product.images && product.images[0] ? (
+            <img
+              src={product.images[0]}
+              alt={`${product.marque} ${product.modele}`}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-white/20 text-xs uppercase tracking-widest">
+              Aucune image
+            </div>
+          )}
           {!product.disponible && (
             <div className="absolute top-4 right-4 z-10 bg-red-500 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
               Épuisé
