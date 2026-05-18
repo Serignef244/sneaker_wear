@@ -46,26 +46,55 @@ export default function AdminPage() {
     setIsLoading(false);
   };
 
+  const compressImage = (file: File): Promise<Blob> => {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_SIZE = 1200;
+        let { width, height } = img;
+        if (width > MAX_SIZE || height > MAX_SIZE) {
+          if (width > height) { height = Math.round(height * MAX_SIZE / width); width = MAX_SIZE; }
+          else { width = Math.round(width * MAX_SIZE / height); height = MAX_SIZE; }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => resolve(blob!), 'image/jpeg', 0.80);
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    });
+  };
+
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       const uploadedUrls = [];
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
       for (const file of images) {
-        const fileName = `${Date.now()}-${file.name}`;
-        const { data, error } = await supabase.storage
-          .from('product-images')
-          .upload(fileName, file);
+        // Compresser l'image avant upload
+        const compressed = await compressImage(file);
 
-        if (error) throw error;
+        const formDataUpload = new FormData();
+        formDataUpload.append('file', compressed);
+        formDataUpload.append('upload_preset', uploadPreset!);
+        formDataUpload.append('folder', 'sneakerwear');
 
-        const { data: { publicUrl } } = supabase.storage
-          .from('product-images')
-          .getPublicUrl(fileName);
-        
-        uploadedUrls.push(publicUrl);
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          { method: 'POST', body: formDataUpload }
+        );
+
+        if (!response.ok) throw new Error('Erreur upload Cloudinary');
+
+        const data = await response.json();
+        uploadedUrls.push(data.secure_url);
       }
 
       const { error: insertError } = await supabase
